@@ -12,10 +12,8 @@ auto main() -> int {
 
     std::ifstream inputFile("input.txt");
     while (std::getline(inputFile, input)) {
-        std::string substr1 = input.substr(0, input.find("   "));
-        std::string substr2 = input.substr(input.find("   ")+3, input.find('\n'));
-        arr1.push_back(std::stoi(substr1));
-        arr2.push_back(std::stoi(substr2));
+        arr1.push_back(std::stoi(input.substr(0, input.find("   "))));
+        arr2.push_back(std::stoi(input.substr(input.find("   ")+3, input.find('\n'))));
     }
     inputFile.close();
 
