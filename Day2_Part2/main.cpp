@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <ranges>
 
-auto split(const std::string &s, const char delim) -> std::vector<int> {
+auto split(const std::string& s, const char delim) -> std::vector<int> {
     std::vector<int> result;
     std::stringstream ss(s);
     std::string item;
@@ -18,19 +18,33 @@ auto split(const std::string &s, const char delim) -> std::vector<int> {
 
 auto ecart(const std::vector<int>& v) -> bool {
     for (int i = 1; i < v.size(); i++) {
-        if (std::abs(v[i] - v[i-1]) > 3) {
+        if (v[i] - v[i - 1] > 3 || v[i] - v[i - 1] < -3) {
             return false;
         }
     }
     return true;
 }
 
-bool duplicate(std::vector<int>& v) {
+auto duplicate(std::vector<int>& v) -> bool {
     std::ranges::sort(v);
     return std::ranges::adjacent_find(v) != v.end();
 }
 
+auto mainLoop(std::vector<int>& v) -> bool {
+    if (std::ranges::is_sorted(v) || std::ranges::is_sorted(v, std::greater{})) {
+
+        return true;
+    }
+    else {
+        // Enlever 1er anomalie
+        // Main loop
+    }
+    return false;
+}
+
+
 auto main() -> int {
+
     std::cout << "--- Advent of 2024 : Day 2 ---" << std::endl;
 
     std::string input;
@@ -39,24 +53,12 @@ auto main() -> int {
     std::ifstream inputFile("input.txt");
     while (std::getline(inputFile, input)) {
         std::vector<int> fileLine = split(input, ' ');
-        if (std::ranges::is_sorted(fileLine)) {
-            if (ecart(fileLine)) {
-                if (duplicate(fileLine)) {
-                } else {
-                    safe++;
-                }
-            }
-        }
-        else if (std::ranges::is_sorted(fileLine, std::greater{})) {
-            if (ecart(fileLine)) {
-                if (duplicate(fileLine)) {
-                } else {
-                    safe++;
-                }
-            }
+        if (mainLoop(fileLine)) {
+            safe++;
         }
     }
     inputFile.close();
     std::cout << safe << std::endl;
+
     return 0;
 }
