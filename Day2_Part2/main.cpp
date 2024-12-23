@@ -55,15 +55,14 @@ auto main() -> int {
             safe++;
         }
         else {
-            // A tester si ca decalle bien quand on insert dans le vector
+            std::vector<int> tempVec = fileLine;
             for (int i = 0; i < fileLine.size(); i++) {
-                int temp = fileLine[i];
                 fileLine.erase(fileLine.begin() + i);
                 if (mainLoop(fileLine)) {
                     safe++;
                     break;
                 }
-                fileLine.insert(fileLine.begin() + i, temp);
+                fileLine = tempVec;
             }
         }
     }
