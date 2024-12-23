@@ -32,16 +32,14 @@ auto duplicate(std::vector<int>& v) -> bool {
 
 auto mainLoop(std::vector<int>& v) -> bool {
     if (std::ranges::is_sorted(v) || std::ranges::is_sorted(v, std::greater{})) {
-
-        return true;
-    }
-    else {
-        // Enlever 1er anomalie
-        // Main loop
+        if (ecart(v)) {
+            if (!duplicate(v)) {
+                return true;
+            }
+        }
     }
     return false;
 }
-
 
 auto main() -> int {
 
