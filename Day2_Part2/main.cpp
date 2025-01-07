@@ -1,9 +1,15 @@
 #include <iostream>
+#include <regex>
+#include <string>
 #include <fstream>
-#include <sstream>
-#include <vector>
-#include <algorithm>
-#include <ranges>
+#include <iterator>
+
+auto readToString(std::string filename) -> std::string  {
+    std::ifstream file(filename, std::ios_base::binary | std::ios_base::in);
+    using Iterator = std::istreambuf_iterator<char>;
+    std::string content(Iterator{file}, Iterator{});
+    return content;
+}
 
 auto split(const std::string& s, const char delim) -> std::vector<int> {
     std::vector<int> result;
@@ -16,58 +22,25 @@ auto split(const std::string& s, const char delim) -> std::vector<int> {
     return result;
 }
 
-auto ecart(const std::vector<int>& v) -> bool {
-    for (int i = 1; i < v.size(); i++) {
-        if (v[i] - v[i - 1] > 3 || v[i] - v[i - 1] < -3) {
-            return false;
-        }
-    }
-    return true;
-}
-
-auto duplicate(std::vector<int>& v) -> bool {
-    std::ranges::sort(v);
-    return std::ranges::adjacent_find(v) != v.end();
-}
-
-auto mainLoop(std::vector<int>& v) -> bool {
-    if (std::ranges::is_sorted(v) || std::ranges::is_sorted(v, std::greater{})) {
-        if (ecart(v)) {
-            if (!duplicate(v)) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 auto main() -> int {
+    std::cout << "--- Advent of code 2024 : Day 3 Part 1 ---" << std::endl;
 
-    std::cout << "--- Advent of 2024 : Day 2 ---" << std::endl;
+    std::string contentString = readToString("input.txt");
+    int muli = 0;
+    int total = 0;
+    std::string delimiter = ",";
 
-    std::string input;
-    int safe = 0;
-
-    std::ifstream inputFile("input.txt");
-    while (std::getline(inputFile, input)) {
-        std::vector<int> fileLine = split(input, ' ');
-        if (mainLoop(fileLine)) {
-            safe++;
-        }
-        else {
-            std::vector<int> tempVec = fileLine;
-            for (int i = 0; i < fileLine.size(); i++) {
-                fileLine.erase(fileLine.begin() + i);
-                if (mainLoop(fileLine)) {
-                    safe++;
-                    break;
-                }
-                fileLine = tempVec;
-            }
-        }
+    std::regex regex1("[0-9]{1,3},[0-9]{1,3}");
+    std::smatch res;
+    while (regex_search(contentString, res, regex1, std::regex_constants::match_any)) {
+        std::string s = res[0];
+        std::vector<int> numbers = split(s, ',');
+        muli = numbers[0]*numbers[1];
+        total += muli;
+        std::cout << total << std::endl;
+        contentString = res.suffix().str();
     }
-    inputFile.close();
-    std::cout << safe << std::endl;
+    std::cout << total << std::endl;
 
     return 0;
 }
